@@ -2,7 +2,6 @@ package org.knockknock.messenger;
 
 import org.knockknock.messenger.observer.pattern.MessengerObserver;
 import org.knockknock.messenger.observer.pattern.MessengerSubject;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

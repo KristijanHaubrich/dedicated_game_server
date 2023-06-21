@@ -21,7 +21,6 @@ public class MessengerClientThread extends Thread{
         }catch (IOException e){
             e.printStackTrace();
         }
-
     }
 
     public void run(){

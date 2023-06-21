@@ -2,12 +2,6 @@ package org.knockknock.messenger.observer.pattern;
 
 import org.knockknock.messenger.observer.pattern.interfaces.IObserver;
 import org.knockknock.messenger.observer.pattern.interfaces.ISubject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,8 +36,5 @@ public class MessengerSubject implements ISubject {
                     observer -> observer.update(message)
             );
         }
-    }
-    public int numberOfObserves(){
-        return observers.size();
     }
 }
