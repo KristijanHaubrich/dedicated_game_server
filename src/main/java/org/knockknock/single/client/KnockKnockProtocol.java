@@ -1,4 +1,4 @@
-package org.knockknock.single.client.knockknock;
+package org.knockknock.single.client;
 
 public class KnockKnockProtocol {
     private static final int WAITING = 0;

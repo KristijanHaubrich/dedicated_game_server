@@ -1,6 +1,6 @@
 package org.knockknock.multi.client;
 
-import org.knockknock.single.client.knockknock.KnockKnockProtocol;
+import org.knockknock.single.client.KnockKnockProtocol;
 
 import java.net.*;
 import java.io.*;
