@@ -6,10 +6,10 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class MessengerClientThread extends Thread{
+public class MessengerClientReadServerThread extends Thread{
     private final Socket socket;
     private final String hostName;
-    public MessengerClientThread(Socket socket, String hostName) {
+    public MessengerClientReadServerThread(Socket socket, String hostName) {
         super("MessengerClientThread");
         this.socket = socket;
         this.hostName = hostName;

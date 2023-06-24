@@ -24,7 +24,7 @@ public class MessengerClient {
                         new BufferedReader(new InputStreamReader(System.in));
         ){
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-            new MessengerClientThread(socket,hostName).start();
+            new MessengerClientReadServerThread(socket,hostName).start();
 
             while(true){
                 String clientMessage = stdIn.readLine();

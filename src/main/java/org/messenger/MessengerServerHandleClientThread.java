@@ -8,12 +8,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class MessengerServerThread extends Thread {
+public class MessengerServerHandleClientThread extends Thread {
     private final Socket socket;
     private final MessengerSubject messengerSubject;
     private final MessengerObserver clientObserver;
     private final int clientId;
-    public MessengerServerThread(Socket socket, MessengerSubject messengerSubject, MessengerObserver clientObserver, int clientId) {
+    public MessengerServerHandleClientThread(Socket socket, MessengerSubject messengerSubject, MessengerObserver clientObserver, int clientId) {
         super("MessengerServerThread");
         this.socket = socket;
         this.messengerSubject = messengerSubject;
