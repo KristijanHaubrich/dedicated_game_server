@@ -14,15 +14,6 @@ public class MessengerClientReadServerThread extends Thread{
         this.socket = socket;
         this.hostName = hostName;
     }
-
-    public void closeSocket(){
-        try{
-            this.socket.close();
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-
     public void run(){
         try(
                 BufferedReader in = new BufferedReader(
@@ -35,7 +26,7 @@ public class MessengerClientReadServerThread extends Thread{
                     System.out.println(fromServer);
                     if(fromServer.equals("Napuštaš razgovor")){
                         System.out.println("-----------------------------------------------------------------------------------");
-                        closeSocket();
+                        socket.close();
                         break;
                     }
                 }

@@ -8,6 +8,16 @@ import java.util.List;
 
 public class MessengerSubject implements ISubject {
     private final List<IObserver> observers = new ArrayList<>();
+    private static MessengerSubject instance = null;
+    private MessengerSubject(){}
+    public static MessengerSubject getInstance() {
+        if(instance == null){
+            instance = new MessengerSubject();
+            return instance;
+        }
+        return instance;
+    }
+
     @Override
     public void subscribe(IObserver iObserver) {
         if(!observers.contains(iObserver)){

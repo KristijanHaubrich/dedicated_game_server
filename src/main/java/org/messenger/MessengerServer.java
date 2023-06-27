@@ -3,7 +3,6 @@ package org.messenger;
 import org.messenger.observer.pattern.MessengerObserver;
 import org.messenger.observer.pattern.MessengerSubject;
 import java.io.IOException;
-import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -16,11 +15,14 @@ public class MessengerServer {
         }
 
         int portNumber = Integer.parseInt(args[0]);
-        MessengerSubject messengerSubject = new MessengerSubject();
+        MessengerSubject messengerSubject = MessengerSubject.getInstance();
 
         try (
                 ServerSocket serverSocket = new ServerSocket(portNumber)
         ){
+            String server_address = serverSocket.getInetAddress().getHostAddress();
+            String server_port = String.valueOf(portNumber);
+            new MessengerServerEchoThread(server_address,server_port).start();
 
             int clientId = 1;
             while(true){

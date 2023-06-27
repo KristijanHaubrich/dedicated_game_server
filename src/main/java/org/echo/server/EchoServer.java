@@ -38,9 +38,14 @@ public class EchoServer {
                         .forEach(broadcastList::add);
             }
 
+
+
             broadcastList.forEach(
-                    broadcastAdress ->
-                            new EchoServerThread(broadcastAdress,"Tu sam",destinationPort).start()
+                    broadcastAdress ->{
+                        String msg = broadcastAdress.getHostAddress() + "__" + destinationPort;
+                        new EchoServerThread(broadcastAdress,msg,destinationPort).start();
+                    }
+
             );
 
         }
