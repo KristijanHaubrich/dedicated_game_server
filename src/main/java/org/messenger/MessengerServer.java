@@ -15,7 +15,6 @@ public class MessengerServer {
         }
 
         int portNumber = Integer.parseInt(args[0]);
-        MessengerSubject messengerSubject = MessengerSubject.getInstance();
 
         try (
                 ServerSocket serverSocket = new ServerSocket(portNumber)
@@ -23,7 +22,7 @@ public class MessengerServer {
             String server_address = serverSocket.getInetAddress().getHostAddress();
             String server_port = String.valueOf(portNumber);
             new MessengerServerEchoThread(server_address,server_port).start();
-
+            MessengerSubject messengerSubject = MessengerSubject.getInstance();
             int clientId = 1;
             while(true){
                 Socket clientSocket = serverSocket.accept();

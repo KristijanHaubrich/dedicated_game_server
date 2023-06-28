@@ -31,17 +31,16 @@ public class MessengerClient {
             hostName = data[0];
             portNumber = Integer.parseInt(data[1]);
 
-            //socket se zatvori u MessengerClientThreadu jer tamo mora primiti zadnju poruku
+            //socket i out se zatvori u MessengerClientThreadu jer tamo mora primiti zadnju poruku
             Socket socket = new Socket(hostName,portNumber);
-            //zatvara se u while petlji
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+
             new MessengerClientReadServerThread(socket,hostName).start();
 
             while(true){
                 String clientMessage = stdIn.readLine();
                 out.println(clientMessage);
                 if(clientMessage.equals("close")){
-                    out.close();
                     break;
                 }
             }
