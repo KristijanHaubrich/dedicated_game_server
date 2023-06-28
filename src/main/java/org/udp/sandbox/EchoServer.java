@@ -1,4 +1,4 @@
-package org.echo.server;
+package org.udp.sandbox;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -8,7 +8,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Objects;
 
-
+//UDP PLAYGROUND
 public class EchoServer {
 
     public static void main(String[] args)  {

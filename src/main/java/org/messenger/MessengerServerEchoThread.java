@@ -11,7 +11,7 @@ public class MessengerServerEchoThread extends Thread {
         this.server_address = server_address;
         this.server_port = server_port;
     }
-
+    @Override
     public void run(){
         try(
                 DatagramSocket socket = new DatagramSocket()
@@ -32,7 +32,7 @@ public class MessengerServerEchoThread extends Thread {
             }
 
         } catch (IOException e) {
-            throw new RuntimeException(e);}
+            e.printStackTrace();}
         catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
         }

@@ -1,8 +1,9 @@
-package org.echo.server;
+package org.udp.sandbox;
 
 import java.io.IOException;
 import java.net.*;
 
+//UDP PLAYGROUND
 public class EchoServerThread extends Thread{
     private final InetAddress address;
     private final String msg;
@@ -13,7 +14,7 @@ public class EchoServerThread extends Thread{
         this.msg = msg;
         this.port = port;
     }
-
+    @Override
     public void run(){
         try(
                 DatagramSocket socket = new DatagramSocket()
@@ -29,7 +30,7 @@ public class EchoServerThread extends Thread{
             }
 
         } catch (IOException e) {
-            throw new RuntimeException(e);}
+            e.printStackTrace();}
         catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
         }

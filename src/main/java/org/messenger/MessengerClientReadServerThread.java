@@ -14,6 +14,7 @@ public class MessengerClientReadServerThread extends Thread{
         this.socket = socket;
         this.hostName = hostName;
     }
+    @Override
     public void run(){
         try(
                 BufferedReader in = new BufferedReader(

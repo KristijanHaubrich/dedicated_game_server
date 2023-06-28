@@ -20,6 +20,7 @@ public class MessengerServerHandleClientThread extends Thread {
         this.clientObserver = clientObserver;
         this.clientId = clientId;
     }
+    @Override
     public void run() {
         try(
                 BufferedReader in = new BufferedReader(

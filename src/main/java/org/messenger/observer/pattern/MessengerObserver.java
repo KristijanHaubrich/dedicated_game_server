@@ -14,7 +14,7 @@ public class MessengerObserver implements IObserver {
 
     @Override
     public void update(String message) {
-        //try with resourses nakon prve poruke ovdje bi blokiro slanje ostalih
+        //try with resourses nakon prve poruke bi blokiro slanje sljdedećih
         try{
             PrintWriter out =
                     new PrintWriter(socket.getOutputStream(), true);

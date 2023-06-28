@@ -1,11 +1,10 @@
-package org.echo.server;
+package org.udp.sandbox;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.SocketException;
 
+//UDP PLAYGROUND
 public class EchoClient {
     public static void main(String[] args)  {
         if (args.length != 1) {
@@ -22,17 +21,12 @@ public class EchoClient {
             DatagramPacket packet = new DatagramPacket(buf,buf.length);
             socket.receive(packet);
 
-            InetAddress address = packet.getAddress();
-            int port = packet.getPort();
-
                 String received = new String(packet.getData(),0,packet.getLength());
 
                 String[] msg = received.split("__",2);
                 System.out.println("Server address: " + msg[0] + " Server port: " +  msg[1]);
 
-        }catch (SocketException e){
-            e.printStackTrace();
-        }catch (IOException e){
+        }catch (IOException  e){
             e.printStackTrace();
         }
     }
