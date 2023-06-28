@@ -31,21 +31,25 @@ public class MessengerSubject implements ISubject {
     @Override
     public void notifyObservers(String message, IObserver blackListedObserver) {
         if(!observers.isEmpty()){
-            observers.forEach(
-                    observer ->{
-                        if(observer != blackListedObserver){
-                            observer.update(message);
+            synchronized (observers){
+                observers.forEach(
+                        observer ->{
+                            if(observer != blackListedObserver){
+                                observer.update(message);
+                            }
                         }
-                    }
-            );
+                );
+            }
         }
     }
     @Override
     public void notifyObservers(String message){
         if(!observers.isEmpty()){
-            observers.forEach(
-                    observer -> observer.update(message)
-            );
+            synchronized (observers){
+                observers.forEach(
+                        observer -> observer.update(message)
+                );
+            }
         }
     }
 }
