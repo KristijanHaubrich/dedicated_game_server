@@ -31,7 +31,7 @@ public class MessengerClient {
             hostName = data[0];
             portNumber = Integer.parseInt(data[1]);
 
-            //socket i out se zatvori u MessengerClientThreadu jer tamo mora primiti zadnju poruku
+            //socket i out se zatvori u MessengerClientReadServerThreadu jer tamo mora primiti zadnju poruku
             Socket socket = new Socket(hostName,portNumber);
             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
