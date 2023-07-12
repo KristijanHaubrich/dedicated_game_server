@@ -1,37 +1,40 @@
 package org.udp.sandbox;
 
 import java.io.IOException;
-import java.net.*;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 
 //UDP PLAYGROUND
-public class EchoServerThread extends Thread{
+public class EchoServerThread extends Thread {
     private final InetAddress address;
     private final String msg;
     private final int port;
-    public EchoServerThread(InetAddress address,String msg,int port) {
+
+    public EchoServerThread(InetAddress address, String msg, int port) {
         super("EchoServerThread");
         this.address = address;
         this.msg = msg;
         this.port = port;
     }
+
     @Override
-    public void run(){
-        try(
+    public void run() {
+        try (
                 DatagramSocket socket = new DatagramSocket()
-        )
-        {
+        ) {
             socket.setBroadcast(true);
-            while(true){
+            while (true) {
                 byte[] buffer = msg.getBytes();
                 DatagramPacket packet
-                        = new DatagramPacket(buffer, buffer.length, address,port);
+                        = new DatagramPacket(buffer, buffer.length, address, port);
                 socket.send(packet);
-                Thread.sleep( 1000);
+                Thread.sleep(1000);
             }
 
         } catch (IOException e) {
-            e.printStackTrace();}
-        catch (InterruptedException ie) {
+            e.printStackTrace();
+        } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
         }
 

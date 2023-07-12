@@ -11,7 +11,7 @@ import java.util.Objects;
 //UDP PLAYGROUND
 public class EchoServer {
 
-    public static void main(String[] args)  {
+    public static void main(String[] args) {
 
         if (args.length != 1) {
             System.err.println("Usage: java KnockKnockServer <port number>");
@@ -19,8 +19,7 @@ public class EchoServer {
         }
         int destinationPort = Integer.parseInt(args[0]);
 
-        try
-        {
+        try {
             List<InetAddress> broadcastList = new ArrayList<>();
             Enumeration<NetworkInterface> interfaces
                     = NetworkInterface.getNetworkInterfaces();
@@ -39,17 +38,15 @@ public class EchoServer {
             }
 
 
-
             broadcastList.forEach(
-                    broadcastAdress ->{
+                    broadcastAdress -> {
                         String msg = broadcastAdress.getHostAddress() + "__" + destinationPort;
-                        new EchoServerThread(broadcastAdress,msg,destinationPort).start();
+                        new EchoServerThread(broadcastAdress, msg, destinationPort).start();
                     }
 
             );
 
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

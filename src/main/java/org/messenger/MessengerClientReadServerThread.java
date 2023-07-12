@@ -6,26 +6,28 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class MessengerClientReadServerThread extends Thread{
+public class MessengerClientReadServerThread extends Thread {
     private final Socket socket;
     private final String hostName;
+
     public MessengerClientReadServerThread(Socket socket, String hostName) {
         super("MessengerClientThread");
         this.socket = socket;
         this.hostName = hostName;
     }
+
     @Override
-    public void run(){
-        try(
+    public void run() {
+        try (
                 BufferedReader in = new BufferedReader(
-                        new InputStreamReader(socket.getInputStream()));
+                        new InputStreamReader(socket.getInputStream()))
         ) {
             String fromServer;
 
             while (true) {
-                if((fromServer = in.readLine()) != null){
+                if ((fromServer = in.readLine()) != null) {
                     System.out.println(fromServer);
-                    if(fromServer.equals("Napuštaš razgovor")){
+                    if (fromServer.equals("Napuštaš razgovor")) {
                         System.out.println("-----------------------------------------------------------------------------------");
                         socket.close();
                         break;
