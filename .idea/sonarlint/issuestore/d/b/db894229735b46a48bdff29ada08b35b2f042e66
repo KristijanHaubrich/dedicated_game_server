@@ -1,0 +1,12 @@
+
+g	java:S112H"FDefine and throw a dedicated exception instead of using a generic one.(Ë·ïİÿÿÿÿÿ8Ü·œâ”1
+q
+java:S2095:"OUse try-with-resources or close this "GLFWErrorCallback" in a "finally" clause.(àâç”ûÿÿÿÿ8ş·œâ”1
+W
+java:S1161#":Add the "@Override" annotation above this method signature(“–ış8…¸œâ”1
+Z	java:S106:"9Replace this use of System.out or System.err by a logger.(àâç”ûÿÿÿÿ8¸œâ”1
+\
+java:S1117K":Rename "window" which hides the field declared at line 28.(ûœ´­úÿÿÿÿ8’¸œâ”1
+Z
+java:S1612"7Replace this lambda with method reference 'Quad::draw'.(Äã›éüÿÿÿÿ8™›â”1
+V	java:S106›"9Replace this use of System.out or System.err by a logger.(Íæ·„8¸œâ”1
