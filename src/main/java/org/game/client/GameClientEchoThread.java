@@ -4,13 +4,17 @@ import org.game.components.ServerCollector;
 import org.game.components.ServerConnection;
 
 import java.io.IOException;
+import java.lang.reflect.AccessibleObject;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameClientEchoThread extends Thread{
-    public  GameClientEchoThread(){
+    private final AtomicBoolean isServerPicked;
+    public  GameClientEchoThread(AtomicBoolean isServerPicked){
         super("GameClientEchoThread");
+        this.isServerPicked = isServerPicked;
     }
     @Override
     public void run(){
@@ -23,7 +27,8 @@ public class GameClientEchoThread extends Thread{
 
             UDPSocket.setReuseAddress(true);
             UDPSocket.bind(new InetSocketAddress(4444));
-            while(true){
+
+            while(!isServerPicked.get()){
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);
                 UDPSocket.receive(packet);
 
@@ -43,8 +48,6 @@ public class GameClientEchoThread extends Thread{
                      ServerConnection serverConnection = new ServerConnection(hostName,portNumber);
                      ServerCollector.getInstance().addConnection(serverConnection);
                  }
-
-
             }
 
         }catch (IOException e){

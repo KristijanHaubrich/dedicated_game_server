@@ -9,10 +9,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameClientNewGameThread extends Thread {
     private final ServerConnection serverConnection;
-
     public GameClientNewGameThread(ServerConnection serverConnection) {
         super("GameClientNewGameThread");
         this.serverConnection = serverConnection;
@@ -29,23 +29,30 @@ public class GameClientNewGameThread extends Thread {
             serverProxy.setOutput(socket);
 
             new GameThread().start();
-
             String serverInput;
-            while (serverProxy.isOpenConnection()) {
+
+            while (true) {
                 if ((serverInput = in.readLine()) != null) {
-                    Quad quad = GameMessageDecoder.getInstance().decodeMessage(serverInput);
+                    if(serverInput.equals("close")) break;
 
-                    if (serverProxy.alreadyExist(quad.getQuadId())) {
+                    String[] data = serverInput.split("__", 13);
 
-                        for (Quad quad1 : ServerProxy.getInstance().getQuads()) {
+                    if(data[0].equals("remove")){
+                        ServerProxy.getInstance().removeQuad(data[1]);
+                    }else{
+                        Quad quad = GameMessageDecoder.getInstance().decodeMessage(serverInput);
+                        if (serverProxy.alreadyExist(quad.getQuadId())) {
 
-                            if (quad1.getQuadId().equals(quad.getQuadId())) {
-                                quad1.updateQuad(quad.getVertices());
+                            for (Quad quad1 : ServerProxy.getInstance().getQuads()) {
+
+                                if (quad1.getQuadId().equals(quad.getQuadId())) {
+                                    quad1.updateQuad(quad.getVertices());
+                                }
                             }
-                        }
 
-                    } else {
-                        serverProxy.addQuad(quad);
+                        } else {
+                            serverProxy.addQuad(quad);
+                        }
                     }
                 }
             }

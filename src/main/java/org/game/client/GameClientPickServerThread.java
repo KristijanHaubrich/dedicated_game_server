@@ -11,9 +11,9 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
-import java.io.IOException;
 import java.nio.IntBuffer;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -25,16 +25,20 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class GameClientPickServerThread extends Thread {
     private long window;
+    private AtomicBoolean isServerPicked;
     private List<ServerConnection> serverConnections = new ArrayList<>();
     private static final GameVector2<Integer> RESOLUTION = GameVector2.of(800,800);
 
+    public GameClientPickServerThread(AtomicBoolean isServerPicked) {
+        this.isServerPicked = isServerPicked;
+    }
+
     @Override
     public void run() {
-        System.out.println("Hello LWJGL " + Version.getVersion() + "!");
 
         init();
         loop();
-
+        System.out.println("GameClientPickServerThread zatvoren");
         // Free the window callbacks and destroy the window
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
@@ -66,30 +70,36 @@ public class GameClientPickServerThread extends Thread {
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE){
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
+            }
+
             switch (key) {
                 case GLFW_KEY_1:
                     if(serverConnections.size() >= 1){
                         new GameClientNewGameThread(serverConnections.get(0)).start();
+                        isServerPicked.set(true);
                         glfwSetWindowShouldClose(window, true);
                     }
                     break;
                 case GLFW_KEY_2:
                     if(serverConnections.size() >= 2){
                         new GameClientNewGameThread(serverConnections.get(1)).start();
+                        isServerPicked.set(true);
                         glfwSetWindowShouldClose(window, true);
                     }
                     break;
                 case GLFW_KEY_3:
                     if(serverConnections.size() >= 3){
                         new GameClientNewGameThread(serverConnections.get(2)).start();
+                        isServerPicked.set(true);
                         glfwSetWindowShouldClose(window, true);
                     }
                     break;
                 case GLFW_KEY_4:
                     if(serverConnections.size() >= 4){
                         new GameClientNewGameThread(serverConnections.get(3)).start();
+                        isServerPicked.set(true);
                         glfwSetWindowShouldClose(window, true);
                     }
                     break;

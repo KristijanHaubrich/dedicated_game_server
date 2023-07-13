@@ -8,6 +8,7 @@ import org.game.observer.GameSubject;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 
 public class GameServerHandleClientThread extends Thread{
@@ -22,24 +23,33 @@ public class GameServerHandleClientThread extends Thread{
     @Override
     public void run(){
         GameSubject gameSubject = GameSubject.getInstance();
-        GameObserver currentgameObserver = new GameObserver(this.socket);
-        gameSubject.subscribe(currentgameObserver);
+        GameObserver currentGameObserver = new GameObserver(this.socket);
+        gameSubject.subscribe(currentGameObserver);
 
         try(
                 BufferedReader in = new BufferedReader(
                         new InputStreamReader(
                                 socket.getInputStream()));
+                 PrintWriter out =
+                        new PrintWriter(socket.getOutputStream(), true);
+
                 ){
-            Boolean isConnected = true;
-            while(isConnected){
+
+            while(true){
                 String clientInput;
+                String CLIENT_ID = "klijent"+clientId;
                 if((clientInput = in.readLine()) != null){
-                    if(clientInput.equals("close")) isConnected = false;
+                    if(clientInput.equals("close")) {
+                        gameSubject.unsubscribe(currentGameObserver);
+                        gameSubject.notifyObservers("remove__"+CLIENT_ID);
+                        out.println("close");
+                        break;
+                    }
                     else{
                         Quad quad = GameMessageDecoder.getInstance().decodeMessage(clientInput);
-                        quad.setQuadId("klijent"+clientId);
+                        quad.setQuadId(CLIENT_ID);
                         String finalMessage = quad.toString();
-                        gameSubject.notifyObservers(finalMessage,currentgameObserver);
+                        gameSubject.notifyObservers(finalMessage,currentGameObserver);
                     }
                 }
             }

@@ -3,6 +3,7 @@ package org.game.server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameServer {
     public static void main(String[] args) {
@@ -19,10 +20,13 @@ public class GameServer {
         ) {
             String serverAddress = serverSocket.getInetAddress().getHostAddress();
             String serverPort = String.valueOf(portNumber);
-            new GameServerEchoThread(serverAddress, serverPort).start();
+
+            AtomicBoolean isServerUp = new AtomicBoolean(true);
+            new ServerTerminalThread(isServerUp).start();
+            new GameServerEchoThread(serverAddress, serverPort,isServerUp).start();
 
             int clientId = 1;
-            while (true) {
+            while (isServerUp.get()) {
                 Socket clientSocket = serverSocket.accept();
                 new GameServerHandleClientThread(clientSocket,clientId).start();
                 clientId++;

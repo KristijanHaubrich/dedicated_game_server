@@ -15,11 +15,6 @@ public class ServerCollector {
                 serverConnections.add(serverConnection);
         }
     }
-    public void removeConnection(ServerConnection serverConnection){
-        synchronized (serverConnections){
-            serverConnections.remove(serverConnection);
-        }
-    }
     public Set<ServerConnection> getServerConnections() {
         synchronized (serverConnections){
            return serverConnections;

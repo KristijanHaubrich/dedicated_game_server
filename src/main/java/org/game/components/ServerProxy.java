@@ -9,7 +9,6 @@ import java.util.Set;
 public class ServerProxy {
     private final Set<Quad> quads = new HashSet<>();
     private PrintWriter out = null;
-    private Boolean isOpenConnection = true;
     private static final ServerProxy instance = new ServerProxy();
     private ServerProxy() {}
     public static ServerProxy getInstance() {
@@ -21,9 +20,11 @@ public class ServerProxy {
             quads.add(quad);
         }
     }
-    public void removeQuad(Quad quad){
+    public void removeQuad(String quadId){
         synchronized (quads){
-            quads.remove(quad);
+            for (Quad quad : quads) {
+                if(quad.getQuadId().equals(quadId)) quads.remove(quad);
+            }
         }
     }
     public Set<Quad> getQuads() {
@@ -41,12 +42,6 @@ public class ServerProxy {
     }
     public void notifyServer(String msg){
         this.out.println(msg);
-    }
-    public void closeConnection(){
-        this.isOpenConnection = false;
-    }
-    public Boolean isOpenConnection(){
-        return this.isOpenConnection;
     }
     public void setOutput(Socket socket) {
         try {

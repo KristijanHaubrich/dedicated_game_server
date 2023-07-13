@@ -16,6 +16,7 @@ import java.io.InputStreamReader;
 import java.nio.IntBuffer;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
@@ -35,17 +36,17 @@ public class GameThread extends Thread{
     public void run() {
         try{
             init();
+            loop();
+            System.out.println("GameThread zatvoren");
+            // Free the window callbacks and destroy the window
+            glfwFreeCallbacks(window);
+            glfwDestroyWindow(window);
+            // Terminate GLFW and free the error callback
+            glfwTerminate();
+            glfwSetErrorCallback(null).free();
         }catch (IOException e){
             e.printStackTrace();
         }
-
-        loop();
-        // Free the window callbacks and destroy the window
-        glfwFreeCallbacks(window);
-        glfwDestroyWindow(window);
-        // Terminate GLFW and free the error callback
-        glfwTerminate();
-        glfwSetErrorCallback(null).free();
     }
 
     private void init() throws IOException{
@@ -75,8 +76,6 @@ public class GameThread extends Thread{
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
             if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE){
                 glfwSetWindowShouldClose(window, true);// We will detect this in the rendering loop
-                ServerProxy.getInstance().notifyServer("close");
-                ServerProxy.getInstance().closeConnection();
             }
             switch (key) {
                 case GLFW_KEY_W:
@@ -145,6 +144,7 @@ public class GameThread extends Thread{
             );
             glfwSwapBuffers(window); // swap the color buffers
         }
+        ServerProxy.getInstance().notifyServer("close");
     }
     public GameVector3<Float> chooseColor() throws IOException{
             BufferedReader stdIn =

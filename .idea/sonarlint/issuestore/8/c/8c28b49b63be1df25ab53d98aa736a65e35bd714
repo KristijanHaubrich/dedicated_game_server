@@ -1,7 +1,7 @@
 
 E
-java:S5411""(Use a primitive boolean expression here.(Ë‰¿ 8¸ª¤Ý”1
-E
-java:S5411&"(Use a primitive boolean expression here.(€ðÄá8¾ª¤Ý”1
+java:S5411,"(Use a primitive boolean expression here.(€ðÄá8¥»óþ”1
 o
-java:S3776"RRefactor this method to reduce its Cognitive Complexity from 17 to the 15 allowed.(“–ýþ8ÂëÇÙ”1
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 27 to the 15 allowed.(“–ýþ8Ðùçþ”1
+h
+java:S1128"FRemove this unused import 'java.util.concurrent.atomic.AtomicBoolean'.(§­‹¼üÿÿÿÿ8Ó³øþ”1
