@@ -29,7 +29,7 @@ public class MessengerServerHandleClientThread extends Thread {
                         new PrintWriter(socket.getOutputStream(), true)
         ) {
             MessengerSubject messengerSubject = MessengerSubject.getInstance();
-            MessengerObserver clientObserver = new MessengerObserver(socket);
+            MessengerObserver clientObserver = new MessengerObserver(socket,clientId);
             out.println("Dobrodošli u Poslovni Chat. Ime: " + clientId + ". Klijent (za napuštanje chat-a unesite 'close')\n-----------------------------------------------------------------------------------");
             messengerSubject.notifyObservers("{ Priključio se " + clientId + ". klijent }", clientObserver);
             messengerSubject.subscribe(clientObserver);

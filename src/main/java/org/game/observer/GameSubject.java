@@ -1,13 +1,15 @@
 package org.game.observer;
+
 import org.messenger.observer.interfaces.IObserver;
 import org.messenger.observer.interfaces.ISubject;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 public class GameSubject implements ISubject {
-    private final Set<IObserver> observers = new HashSet<>();
     private static final GameSubject instance = new GameSubject();
+    private final Set<IObserver> observers = new HashSet<>();
 
     private GameSubject() {
     }
@@ -18,14 +20,17 @@ public class GameSubject implements ISubject {
 
     @Override
     public void subscribe(IObserver iObserver) {
-        if (!observers.contains(iObserver)) {
-            observers.add(iObserver);
-        }
+        observers.add(iObserver);
     }
 
     @Override
     public void unsubscribe(IObserver iObserver) {
-        observers.remove(iObserver);
+        for (Iterator<IObserver> iterator = observers.iterator(); iterator.hasNext(); ) {
+            IObserver currentObserver = iterator.next();
+            if (currentObserver == iObserver) {
+                iterator.remove();
+            }
+        }
     }
 
     @Override
@@ -50,6 +55,28 @@ public class GameSubject implements ISubject {
                 observers.forEach(
                         observer -> observer.update(message)
                 );
+            }
+        }
+    }
+
+    public void sendPosition(String clientId, String quad) {
+        synchronized (observers) {
+            if (!observers.isEmpty()) {
+                for (IObserver observer : observers) {
+                    if (observer.getId().equals(clientId)) observer.update(quad);
+                }
+            }
+        }
+    }
+
+    public void requestPositions(String clientId) {
+        synchronized (observers) {
+            if (!observers.isEmpty()) {
+                for (IObserver observer : observers) {
+                    if (!observer.getId().equals(clientId)) {
+                        observer.update("sendPositionFor__" + clientId);
+                    }
+                }
             }
         }
     }

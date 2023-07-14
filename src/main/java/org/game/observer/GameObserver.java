@@ -8,7 +8,9 @@ import java.net.Socket;
 
 public class GameObserver implements IObserver {
     private PrintWriter out;
-    public GameObserver(Socket socket) {
+    private final String clientId;
+    public GameObserver(Socket socket,String clientId) {
+        this.clientId = clientId;
         try {
             this.out =
                     new PrintWriter(socket.getOutputStream(), true);
@@ -19,5 +21,10 @@ public class GameObserver implements IObserver {
     @Override
     public void update(String message) {
         out.println(message);
+    }
+
+    @Override
+    public String getId() {
+        return clientId;
     }
 }

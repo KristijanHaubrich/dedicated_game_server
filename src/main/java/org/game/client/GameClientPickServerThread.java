@@ -5,29 +5,27 @@ import org.game.components.ServerCollector;
 import org.game.components.ServerConnection;
 import org.game.structure.GameVector2;
 import org.game.structure.GameVector3;
-import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
 import java.nio.IntBuffer;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class GameClientPickServerThread extends Thread {
+    private static final GameVector2<Integer> RESOLUTION = GameVector2.of(800, 800);
     private long window;
-    private AtomicBoolean isServerPicked;
-    private List<ServerConnection> serverConnections = new ArrayList<>();
-    private static final GameVector2<Integer> RESOLUTION = GameVector2.of(800,800);
+    private final AtomicBoolean isServerPicked;
+    private final List<ServerConnection> serverConnections = new ArrayList<>();
 
     public GameClientPickServerThread(AtomicBoolean isServerPicked) {
         this.isServerPicked = isServerPicked;
@@ -38,7 +36,6 @@ public class GameClientPickServerThread extends Thread {
 
         init();
         loop();
-        System.out.println("GameClientPickServerThread zatvoren");
         // Free the window callbacks and destroy the window
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
@@ -48,7 +45,7 @@ public class GameClientPickServerThread extends Thread {
         glfwSetErrorCallback(null).free();
     }
 
-    private void init(){
+    private void init() {
 
         // Setup an error callback. The default implementation
         // will print the error message in System.err.
@@ -70,36 +67,38 @@ public class GameClientPickServerThread extends Thread {
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE){
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
                 glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
             }
 
             switch (key) {
                 case GLFW_KEY_1:
-                    if(serverConnections.size() >= 1){
-                        new GameClientNewGameThread(serverConnections.get(0)).start();
+                    if (!serverConnections.isEmpty()) {
+                        //notify GameClientEchoThread to close
                         isServerPicked.set(true);
+                        //start new game
+                        new GameClientNewGameThread(serverConnections.get(0)).start();
                         glfwSetWindowShouldClose(window, true);
                     }
                     break;
                 case GLFW_KEY_2:
-                    if(serverConnections.size() >= 2){
-                        new GameClientNewGameThread(serverConnections.get(1)).start();
+                    if (serverConnections.size() >= 2) {
                         isServerPicked.set(true);
+                        new GameClientNewGameThread(serverConnections.get(1)).start();
                         glfwSetWindowShouldClose(window, true);
                     }
                     break;
                 case GLFW_KEY_3:
-                    if(serverConnections.size() >= 3){
-                        new GameClientNewGameThread(serverConnections.get(2)).start();
+                    if (serverConnections.size() >= 3) {
                         isServerPicked.set(true);
+                        new GameClientNewGameThread(serverConnections.get(2)).start();
                         glfwSetWindowShouldClose(window, true);
                     }
                     break;
                 case GLFW_KEY_4:
-                    if(serverConnections.size() >= 4){
-                        new GameClientNewGameThread(serverConnections.get(3)).start();
+                    if (serverConnections.size() >= 4) {
                         isServerPicked.set(true);
+                        new GameClientNewGameThread(serverConnections.get(3)).start();
                         glfwSetWindowShouldClose(window, true);
                     }
                     break;
@@ -149,15 +148,15 @@ public class GameClientPickServerThread extends Thread {
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);// clear the framebuffer
 
-            if(!ServerCollector.getInstance().getServerConnections().isEmpty()){
+            if (!ServerCollector.getInstance().getServerConnections().isEmpty()) {
                 float size = 0.1f;
-                Quad quad = new Quad("server",size,GameVector3.of(1.0f,0.0f,0.0f));
+                Quad quad = new Quad("server", size, GameVector3.of(1.0f, 0.0f, 0.0f));
                 for (ServerConnection serverConnection : ServerCollector.getInstance().getServerConnections()) {
-                    if(!this.serverConnections.contains(serverConnection)){
+                    if (!this.serverConnections.contains(serverConnection)) {
                         serverConnections.add(serverConnection);
                     }
                     quad.draw();
-                    //move for next quad
+                    //move for next quad of next server
                     quad.moveUp();
                     quad.moveUp();
                     quad.moveUp();

@@ -20,9 +20,12 @@ public class ServerTerminalThread extends Thread{
                ){
            String input;
            while(true){
-               if((input = stdIn.readLine()) != null && input.equals("close")) this.isServerUp.set(false);
+               //close server
+               if((input = stdIn.readLine()) != null && input.equals("close")){
+                   this.isServerUp.set(false);
+                   break;
+               }
            }
-
        }catch (IOException e){
            e.printStackTrace();
        }

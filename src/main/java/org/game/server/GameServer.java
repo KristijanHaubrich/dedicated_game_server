@@ -21,16 +21,22 @@ public class GameServer {
             String serverAddress = serverSocket.getInetAddress().getHostAddress();
             String serverPort = String.valueOf(portNumber);
 
+            //boolean for ServerTerminalThread,GameServerHandleClientThread and this thread
             AtomicBoolean isServerUp = new AtomicBoolean(true);
+            //boolean for GameServerEchoThread
+            AtomicBoolean isMainServerThreadUp = new AtomicBoolean(true);
+
             new ServerTerminalThread(isServerUp).start();
-            new GameServerEchoThread(serverAddress, serverPort,isServerUp).start();
+            new GameServerEchoThread(serverAddress, serverPort,isMainServerThreadUp).start();
 
             int clientId = 1;
             while (isServerUp.get()) {
                 Socket clientSocket = serverSocket.accept();
-                new GameServerHandleClientThread(clientSocket,clientId).start();
+                new GameServerHandleClientThread(clientSocket,clientId,isServerUp).start();
                 clientId++;
             }
+            //GameServer don't see isServerUp change until accepts one more connection to client so Echo thread needs to be alive until one more client connects
+            isMainServerThreadUp.set(false);
 
         } catch (IOException e) {
             System.out.println("Exception caught when trying to listen on port "

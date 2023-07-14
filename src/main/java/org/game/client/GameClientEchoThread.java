@@ -4,22 +4,23 @@ import org.game.components.ServerCollector;
 import org.game.components.ServerConnection;
 
 import java.io.IOException;
-import java.lang.reflect.AccessibleObject;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetSocketAddress;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class GameClientEchoThread extends Thread{
+public class GameClientEchoThread extends Thread {
     private final AtomicBoolean isServerPicked;
-    public  GameClientEchoThread(AtomicBoolean isServerPicked){
+
+    public GameClientEchoThread(AtomicBoolean isServerPicked) {
         super("GameClientEchoThread");
         this.isServerPicked = isServerPicked;
     }
+
     @Override
-    public void run(){
+    public void run() {
         try (
-                DatagramSocket UDPSocket = new DatagramSocket(null);
+                DatagramSocket UDPSocket = new DatagramSocket(null)
         ) {
             String hostName;
             int portNumber;
@@ -28,7 +29,7 @@ public class GameClientEchoThread extends Thread{
             UDPSocket.setReuseAddress(true);
             UDPSocket.bind(new InetSocketAddress(4444));
 
-            while(!isServerPicked.get()){
+            while (!isServerPicked.get()) {
                 DatagramPacket packet = new DatagramPacket(buf, buf.length);
                 UDPSocket.receive(packet);
 
@@ -40,17 +41,18 @@ public class GameClientEchoThread extends Thread{
 
                 boolean alreadyExist = false;
                 for (ServerConnection serverConnection : ServerCollector.getInstance().getServerConnections()) {
-                    if(serverConnection.getPortNumber() == portNumber){
+                    if (serverConnection.getPortNumber() == portNumber) {
                         alreadyExist = true;
+                        break;
                     }
                 }
-                 if(!alreadyExist){
-                     ServerConnection serverConnection = new ServerConnection(hostName,portNumber);
-                     ServerCollector.getInstance().addConnection(serverConnection);
-                 }
+                if (!alreadyExist) {
+                    ServerConnection serverConnection = new ServerConnection(hostName, portNumber);
+                    ServerCollector.getInstance().addConnection(serverConnection);
+                }
             }
 
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

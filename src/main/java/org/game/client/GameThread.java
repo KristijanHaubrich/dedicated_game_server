@@ -4,7 +4,6 @@ import org.game.components.Quad;
 import org.game.components.ServerProxy;
 import org.game.structure.GameVector2;
 import org.game.structure.GameVector3;
-
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -16,43 +15,42 @@ import java.io.InputStreamReader;
 import java.nio.IntBuffer;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.lwjgl.glfw.Callbacks.glfwFreeCallbacks;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.glfw.GLFW.glfwSwapBuffers;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
-public class GameThread extends Thread{
+public class GameThread extends Thread {
+    private static final GameVector2<Integer> RESOLUTION = GameVector2.of(640, 480);
     private long window;
     private Quad quad;
-    public GameThread(){
+
+    public GameThread() {
         super("GameThread");
     }
-    private static final GameVector2<Integer> RESOLUTION = GameVector2.of(640,480);
 
     public void run() {
-        try{
+        try {
             init();
             loop();
-            System.out.println("GameThread zatvoren");
             // Free the window callbacks and destroy the window
             glfwFreeCallbacks(window);
             glfwDestroyWindow(window);
             // Terminate GLFW and free the error callback
             glfwTerminate();
             glfwSetErrorCallback(null).free();
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void init() throws IOException{
+    private void init() throws IOException {
         float size = 0.1f;
         GameVector3<Float> color = chooseColor();
-        this.quad = new Quad("my_avatar",size,color);
+        this.quad = new Quad("my_avatar", size, color);
+        ServerProxy.getInstance().addQuad(this.quad);
         ServerProxy.getInstance().notifyServer(quad.toString());
         // Setup an error callback. The default implementation
         // will print the error message in System.err.
@@ -74,7 +72,7 @@ public class GameThread extends Thread{
 
         // Setup a key callback. It will be called every time a key is pressed, repeated or released.
         glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE){
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
                 glfwSetWindowShouldClose(window, true);// We will detect this in the rendering loop
             }
             switch (key) {
@@ -139,40 +137,39 @@ public class GameThread extends Thread{
             glfwPollEvents();
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);// clear the framebuffer
             this.quad.draw();
-            ServerProxy.getInstance().getQuads().forEach(
-                    quad1 -> quad1.draw()
-            );
+            ServerProxy.getInstance().getQuads().forEach(Quad::draw);
             glfwSwapBuffers(window); // swap the color buffers
         }
         ServerProxy.getInstance().notifyServer("close");
     }
-    public GameVector3<Float> chooseColor() throws IOException{
-            BufferedReader stdIn =
-                    new BufferedReader(new InputStreamReader(System.in));
 
-            List<String> inputs = Arrays.asList("r", "g", "b", "rg", "rb", "gb");
-            String input;
-            System.out.println("Choose color of your avatar:\ninput r for red\ninput g for green\ninput b for blue\ninput rg for yellow\ninput rb for purple\ninput gb for teal\n");
-            while (true) {
-                input = stdIn.readLine();
-                if (inputs.contains(input)) {
-                    stdIn.close();
-                    switch (input) {
-                        case "r":
-                            return GameVector3.of(1.0f,0.0f,0.0f);
-                        case "g":
-                            return GameVector3.of(0.0f,1.0f,0.0f);
-                        case "b":
-                            return GameVector3.of(0.0f,0.0f,1.0f);
-                        case "rg":
-                            return GameVector3.of(1.0f,1.0f,0.0f);
-                        case "gb":
-                            return GameVector3.of(0.0f,1.0f,1.0f);
-                        case "rb":
-                            return GameVector3.of(1.0f,0.0f,1.0f);
-                        default:
-                    }
+    public GameVector3<Float> chooseColor() throws IOException {
+        BufferedReader stdIn =
+                new BufferedReader(new InputStreamReader(System.in));
+
+        List<String> inputs = Arrays.asList("r", "g", "b", "rg", "rb", "gb");
+        String input;
+        System.out.println("Choose color of your avatar:\ninput r for red\ninput g for green\ninput b for blue\ninput rg for yellow\ninput rb for purple\ninput gb for teal\n");
+        while (true) {
+            input = stdIn.readLine();
+            if (inputs.contains(input)) {
+                stdIn.close();
+                switch (input) {
+                    case "r":
+                        return GameVector3.of(1.0f, 0.0f, 0.0f);
+                    case "g":
+                        return GameVector3.of(0.0f, 1.0f, 0.0f);
+                    case "b":
+                        return GameVector3.of(0.0f, 0.0f, 1.0f);
+                    case "rg":
+                        return GameVector3.of(1.0f, 1.0f, 0.0f);
+                    case "gb":
+                        return GameVector3.of(0.0f, 1.0f, 1.0f);
+                    case "rb":
+                        return GameVector3.of(1.0f, 0.0f, 1.0f);
+                    default:
                 }
             }
+        }
     }
 }
