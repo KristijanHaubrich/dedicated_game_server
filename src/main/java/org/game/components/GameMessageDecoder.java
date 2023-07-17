@@ -4,9 +4,7 @@ import org.game.structure.GameVector2;
 import org.game.structure.GameVector3;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class GameMessageDecoder {
     private static final GameMessageDecoder instance = new GameMessageDecoder();
@@ -23,27 +21,19 @@ public class GameMessageDecoder {
         GameVector3<Float> color;
         Float size;
 
-        if (data[0].equals("sendingPositionFor")) {
-            quadId = data[2];
+        int startPosition = 0;
+        if(data[0].equals("sendingPositionFor"))startPosition = 2;
 
-            vertices.add(new GameVector2<>(Float.valueOf(data[3]), Float.valueOf(data[4])));
-            vertices.add(new GameVector2<>(Float.valueOf(data[5]), Float.valueOf(data[6])));
-            vertices.add(new GameVector2<>(Float.valueOf(data[7]), Float.valueOf(data[8])));
-            vertices.add(new GameVector2<>(Float.valueOf(data[9]), Float.valueOf(data[10])));
+        quadId = data[startPosition];
 
-            color = GameVector3.of(Float.valueOf(data[11]), Float.valueOf(data[12]), Float.valueOf(data[13]));
-            size = Float.valueOf(data[14]);
-        } else {
-            quadId = data[0];
+        vertices.add(new GameVector2<>(Float.valueOf(data[startPosition+1]), Float.valueOf(data[startPosition+2])));
+        vertices.add(new GameVector2<>(Float.valueOf(data[startPosition+3]), Float.valueOf(data[startPosition+4])));
+        vertices.add(new GameVector2<>(Float.valueOf(data[startPosition+5]), Float.valueOf(data[startPosition+6])));
+        vertices.add(new GameVector2<>(Float.valueOf(data[startPosition+7]), Float.valueOf(data[startPosition+8])));
 
-            vertices.add(new GameVector2<>(Float.valueOf(data[1]), Float.valueOf(data[2])));
-            vertices.add(new GameVector2<>(Float.valueOf(data[3]), Float.valueOf(data[4])));
-            vertices.add(new GameVector2<>(Float.valueOf(data[5]), Float.valueOf(data[6])));
-            vertices.add(new GameVector2<>(Float.valueOf(data[7]), Float.valueOf(data[8])));
-            color = GameVector3.of(Float.valueOf(data[9]), Float.valueOf(data[10]), Float.valueOf(data[11]));
+        color = GameVector3.of(Float.valueOf(data[startPosition+9]), Float.valueOf(data[startPosition+10]), Float.valueOf(data[startPosition+11]));
 
-            size = Float.valueOf(data[12]);
-        }
+        size = Float.valueOf(data[startPosition+12]);
 
         return new Quad(quadId, vertices, color, size);
     }

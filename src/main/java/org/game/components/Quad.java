@@ -85,16 +85,18 @@ public class Quad {
 
     @Override
     public String toString() {
-        //formating info of vertices to string for TCP communication
+        //formating vertices to string for TCP communication
         String verticesToString = "__";
         for (GameVector2<Float> vertex : vertices) {
             String vertexToString = vertex.getX() + "__" + vertex.getY() + "__";
             verticesToString = verticesToString.concat(vertexToString);
         }
-        //format for sending info of quad through TCP communication
+        //formating color to string for TCP communication
+        String colorToString = color.getX() + "__" + color.getY() + "__" + color.getZ() + "__";
+        //format for message info of quad through TCP communication
         return quadId
                 + verticesToString
-                + color.getX() + "__" + color.getY() + "__" + color.getZ() + "__"
+                + colorToString
                 + size;
     }
 }

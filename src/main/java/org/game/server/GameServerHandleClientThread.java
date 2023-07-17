@@ -51,17 +51,19 @@ public class GameServerHandleClientThread extends Thread{
                     else if(clientInput.equals("sendInitialPositions")){
                         gameSubject.requestPositions(this.clientId);
                     }
-                    //get position of current client and send it to other clients
+                    //decode message before checking is it for sending position to specific client or sending position to all clients
                     else{
                         String[] data = clientInput.split("__",15);
                         Quad quad = GameMessageDecoder.getInstance().decodeMessage(data);
+                        //changing clientId from "my_avatar" to server clientId that represents quad in other clients"
                         quad.setQuadId(this.clientId);
-
+                        //sending position to specific client
                         if(data[0].equals("sendingPositionFor")){
                             GameSubject.getInstance().sendPosition(data[1],quad.toString());
-                        }else{
-                            String finalMessage = quad.toString();
-                            gameSubject.notifyObservers(finalMessage,currentGameObserver);
+                        }
+                        //sending position to all clients
+                        else{
+                            gameSubject.notifyObservers(quad.toString(),currentGameObserver);
                         }
                     }
                 }
