@@ -19,7 +19,7 @@ public class GameMessageDecoder {
         String quadId;
         List<GameVector2<Float>> vertices = new ArrayList<>();
         GameVector3<Float> color;
-        Float size;
+        float size;
 
         int startPosition = 0;
         if(data[0].equals("sendingPositionFor"))startPosition = 2;
@@ -33,7 +33,7 @@ public class GameMessageDecoder {
 
         color = GameVector3.of(Float.valueOf(data[startPosition+9]), Float.valueOf(data[startPosition+10]), Float.valueOf(data[startPosition+11]));
 
-        size = Float.valueOf(data[startPosition+12]);
+        size = Float.parseFloat(data[startPosition+12]);
 
         return new Quad(quadId, vertices, color, size);
     }

@@ -16,6 +16,7 @@ public class GameServerHandleClientThread extends Thread{
     private final Socket socket;
     private final AtomicBoolean isServerUp;
     private final String clientId;
+    private static final int maxNumOfData = 15;
     GameServerHandleClientThread(Socket clientSocket, int clientId, AtomicBoolean isServerUp){
         super("GameServerHandleClientThread");
         this.socket = clientSocket;
@@ -53,7 +54,7 @@ public class GameServerHandleClientThread extends Thread{
                     }
                     //decode message before checking is it for sending position to specific client or sending position to all clients
                     else{
-                        String[] data = clientInput.split("__",15);
+                        String[] data = clientInput.split("__",maxNumOfData);
                         Quad quad = GameMessageDecoder.getInstance().decodeMessage(data);
                         //changing clientId from "my_avatar" to server clientId that represents quad in other clients"
                         quad.setQuadId(this.clientId);

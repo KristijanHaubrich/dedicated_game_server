@@ -27,12 +27,7 @@ public class ServerProxy {
 
     public void removeQuad(String quadId) {
         synchronized (quads) {
-            for (Iterator<Quad> iterator = quads.iterator(); iterator.hasNext(); ) {
-                Quad quad = iterator.next();
-                if (quad.getQuadId().equals(quadId)) {
-                    iterator.remove();
-                }
-            }
+            quads.removeIf(quad -> quad.getQuadId().equals(quadId));
         }
     }
 
@@ -42,7 +37,7 @@ public class ServerProxy {
         }
     }
 
-    public Boolean alreadyExist(String quadId) {
+    public boolean alreadyExist(String quadId) {
         synchronized (quads) {
             for (Quad quad : quads) {
                 if (quad.getQuadId().equals(quadId)) return true;

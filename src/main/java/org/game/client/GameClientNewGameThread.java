@@ -14,6 +14,8 @@ import java.net.Socket;
 public class GameClientNewGameThread extends Thread {
     private final ServerConnection serverConnection;
 
+    private static final int maxNumOfData = 13;
+
     public GameClientNewGameThread(ServerConnection serverConnection) {
         super("GameClientNewGameThread");
         this.serverConnection = serverConnection;
@@ -40,7 +42,7 @@ public class GameClientNewGameThread extends Thread {
                     //close thread after server detected GameThread is closed (can't use boolean bc readLine() stops thread and for that time thread don't see boolean changes)
                     if (serverInput.equals("close")) break;
 
-                    String[] data = serverInput.split("__", 13);
+                    String[] data = serverInput.split("__", maxNumOfData);
                     //send position of current client to specific client via server
                     if (data[0].equals("sendPositionFor")) {
                         for (Quad quad : ServerProxy.getInstance().getQuads()) {

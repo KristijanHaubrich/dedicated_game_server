@@ -25,12 +25,7 @@ public class GameSubject implements ISubject {
 
     @Override
     public void unsubscribe(IObserver iObserver) {
-        for (Iterator<IObserver> iterator = observers.iterator(); iterator.hasNext(); ) {
-            IObserver currentObserver = iterator.next();
-            if (currentObserver == iObserver) {
-                iterator.remove();
-            }
-        }
+        observers.removeIf(currentObserver -> currentObserver == iObserver);
     }
 
     @Override

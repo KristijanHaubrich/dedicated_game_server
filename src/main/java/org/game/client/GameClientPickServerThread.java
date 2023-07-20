@@ -74,32 +74,22 @@ public class GameClientPickServerThread extends Thread {
             switch (key) {
                 case GLFW_KEY_1:
                     if (!serverConnections.isEmpty()) {
-                        //notify GameClientEchoThread to close
-                        isServerPicked.set(true);
-                        //start new game
-                        new GameClientNewGameThread(serverConnections.get(0)).start();
-                        glfwSetWindowShouldClose(window, true);
+                        startGame(0);
                     }
                     break;
                 case GLFW_KEY_2:
                     if (serverConnections.size() >= 2) {
-                        isServerPicked.set(true);
-                        new GameClientNewGameThread(serverConnections.get(1)).start();
-                        glfwSetWindowShouldClose(window, true);
+                        startGame(1);
                     }
                     break;
                 case GLFW_KEY_3:
                     if (serverConnections.size() >= 3) {
-                        isServerPicked.set(true);
-                        new GameClientNewGameThread(serverConnections.get(2)).start();
-                        glfwSetWindowShouldClose(window, true);
+                        startGame(2);
                     }
                     break;
                 case GLFW_KEY_4:
                     if (serverConnections.size() >= 4) {
-                        isServerPicked.set(true);
-                        new GameClientNewGameThread(serverConnections.get(3)).start();
-                        glfwSetWindowShouldClose(window, true);
+                        startGame(3);
                     }
                     break;
                 default:
@@ -164,5 +154,13 @@ public class GameClientPickServerThread extends Thread {
             }
             glfwSwapBuffers(window); // swap the color buffers
         }
+    }
+
+    private void startGame(int serverIndex){
+        //notify GameClientEchoThread to close
+        isServerPicked.set(true);
+        //start new game
+        new GameClientNewGameThread(serverConnections.get(serverIndex)).start();
+        glfwSetWindowShouldClose(window, true);
     }
 }

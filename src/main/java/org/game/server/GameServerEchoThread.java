@@ -7,14 +7,14 @@ import java.net.InetAddress;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GameServerEchoThread extends Thread{
-    private final String server_address;
-    private final String server_port;
+    private final String serverAddress;
+    private final String serverPort;
     private final AtomicBoolean isMainThreadServerUp;
 
-    public GameServerEchoThread(String server_address, String server_port, AtomicBoolean isMainServerThreadUp) {
+    public GameServerEchoThread(String serverAddress, String serverPort, AtomicBoolean isMainServerThreadUp) {
         super("GameServerEchoThread");
-        this.server_address = server_address;
-        this.server_port = server_port;
+        this.serverAddress = serverAddress;
+        this.serverPort = serverPort;
         this.isMainThreadServerUp = isMainServerThreadUp;
     }
 
@@ -25,19 +25,18 @@ public class GameServerEchoThread extends Thread{
         ) {
             socket.setBroadcast(true);
             while (isMainThreadServerUp.get()) {
-                String msg = server_address + "__" + server_port;
+                String msg = serverAddress + "__" + serverPort;
                 byte[] buffer = msg.getBytes();
 
                 InetAddress address = InetAddress.getByName("255.255.255.255");
 
-                socket.setBroadcast(true);
                 DatagramPacket packet
                         = new DatagramPacket(buffer, buffer.length, address, 4444);
                 socket.send(packet);
                 Thread.sleep(1000);
             }
             //last echo to last client to close his GameClientEhoThread
-            String msg = server_address + "__" + server_port;
+            String msg = serverAddress + "__" + serverPort;
             byte[] buffer = msg.getBytes();
 
             InetAddress address = InetAddress.getByName("255.255.255.255");

@@ -31,12 +31,12 @@ public class Quad {
     }
 
     public void move(GameVector2<Float> moveVertex) {
-        List<GameVector2<Float>> new_vertices = new ArrayList<>();
+        List<GameVector2<Float>> newVertices = new ArrayList<>();
         this.vertices.forEach(
-                vertex -> new_vertices.add(GameVector2.of(vertex.getX() + moveVertex.getX(), vertex.getY() + moveVertex.getY()))
+                vertex -> newVertices.add(GameVector2.of(vertex.getX() + moveVertex.getX(), vertex.getY() + moveVertex.getY()))
         );
         vertices.clear();
-        vertices.addAll(new_vertices);
+        vertices.addAll(newVertices);
     }
 
     public void moveUp() {
@@ -59,17 +59,16 @@ public class Quad {
         synchronized (vertices) {
             glBegin(GL_QUADS);
             glColor3f(color.getX(), color.getY(), color.getZ());
-            for (Iterator<GameVector2<Float>> iterator = vertices.iterator(); iterator.hasNext(); ) {
-                GameVector2<Float> vertex = iterator.next();
+            for (GameVector2<Float> vertex : vertices) {
                 glVertex2f(vertex.getX(), vertex.getY());
             }
             glEnd();
         }
     }
 
-    public void updateQuad(List<GameVector2<Float>> new_vertices) {
+    public void updateQuad(List<GameVector2<Float>> newVertices) {
         this.vertices.clear();
-        this.vertices.addAll(new_vertices);
+        this.vertices.addAll(newVertices);
     }
 
     public List<GameVector2<Float>> getVertices() {
