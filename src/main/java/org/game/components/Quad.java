@@ -29,7 +29,10 @@ public class Quad {
         this.size = size;
         this.color = color;
     }
-
+    /**
+     * This method move quad on screen by adding values of vertex vector passed as argument to all quad vertices.
+     * @param moveVertex vertex vector which values are added to all quad vertices
+     */
     public void move(GameVector2<Float> moveVertex) {
         List<GameVector2<Float>> newVertices = new ArrayList<>();
         this.vertices.forEach(
